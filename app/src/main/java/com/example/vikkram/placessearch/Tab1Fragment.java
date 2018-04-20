@@ -1,6 +1,7 @@
 package com.example.vikkram.placessearch;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,8 +35,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -66,23 +70,30 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
     private static View view;
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    Location location;
+    private String provider;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.tab1_fragment,container,false);
+        view = inflater.inflate(R.layout.tab1_fragment, container, false);
         //btnTEST = (Button) view.findViewById(R.id.btnTEST);
+        locationManager = (LocationManager) getActivity().getSystemService(getContext().LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+
+        getDeviceLocation();
 
         Button searchBtn = view.findViewById(R.id.btn_search);
 
         //searchBtn.setOnClickListener(this);
-        final EditText keyword =  view.findViewById(R.id.et_keyword);
-        final TextView error_keyword = (TextView)  view.findViewById(R.id.ifNullKeyword);
+        final EditText keyword = view.findViewById(R.id.et_keyword);
+        final TextView error_keyword = (TextView) view.findViewById(R.id.ifNullKeyword);
         Context c1 = getActivity().getApplicationContext();
-        destination = (AutoCompleteTextView)  view.findViewById(R.id.atv_destination);
-        locationManager = (LocationManager) c1.getSystemService(c1.LOCATION_SERVICE);
+        destination = (AutoCompleteTextView) view.findViewById(R.id.atv_destination);
 
-        if(mGoogleApiClient == null || !mGoogleApiClient.isConnected()){
+
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             try {
                 mGoogleApiClient = new GoogleApiClient
                         .Builder(getContext())
@@ -96,13 +107,12 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         }
 
 
-
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, LAT_LNG_BOUNDS, null);
 
         destination.setAdapter(mPlaceAutocompleteAdapter);
         //getCurrentPlaceItems();
         //RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.location);
-        RadioGroup radioGroup = (RadioGroup) view .findViewById(R.id.location);
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.location);
         //mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
@@ -111,8 +121,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                                          public void onClick(View v) {
                                              Log.d(TAG, "Search results queried");
 
-                                             if(validateForm())
-                                             {
+                                             if (validateForm()) {
                                                  getJSONData();
                                              }
                                          }
@@ -120,12 +129,11 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
 
 
         );
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
 
-                switch(checkedId) {
+                switch (checkedId) {
                     case R.id.first:
 
                         Log.d(TAG, "radcheck1: ");
@@ -150,101 +158,37 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         return view;
     }
 
-
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        /*
-        try{
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if(mLocationPermissionsGranted){
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-
-                        }else{
-                            Log.d(TAG, "onComplete: current location is null");
-
-                        }
-                    }
-                });
-            }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
-        }
-        */
-    }
-
-    private void getLocationPermission(){
-        Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
                 //initMap();
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(getActivity(),
                         permissions,
                         LOC_REQ_CODE);
             }
-            getDeviceLocation();
 
-        }else{
+
+        } else {
             ActivityCompat.requestPermissions(getActivity(),
                     permissions,
                     LOC_REQ_CODE);
         }
-    }
 
-
-    private void getCurrentPlaceItems() {
-
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED /*&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/)
-        {
-
-            //requestLocationAccessPermission();
-            return;
-
-
-        } else {
-            Location location1 = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, (LocationListener) location1);
-            //Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            //Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            Criteria criteria = new Criteria();
-
-            String mprovider = locationManager.getBestProvider(criteria, false);
-            //locationManager.requestLocationUpdates(mprovider, 15000, 1, (LocationListener) this);
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener((Executor) this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                // Logic to handle location object
-                                lat= location.getLatitude();
-                                lon = location.getLongitude();
-                            }
-                        }
-                    });
-
-
-           // double lat = location1.getLatitude();
-            //double lon = location1.getLongitude();
-            Log.d(TAG,"Latitude: "+lat);
-            Log.d(TAG, "Longitude: "+lon);
+        if (mLocationPermissionsGranted) {
+            location = locationManager.getLastKnownLocation(provider);
 
         }
-        return;
+
     }
+
 
 /*
     private void requestLocationAccessPermission() {
@@ -254,24 +198,50 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
     }
     */
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }
+
     private void getJSONData() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Fetching results");
+        progressDialog.show();
         EditText et_keyword = (EditText) view.findViewById(R.id.et_keyword);
         String keyword = et_keyword.getText().toString();
         Spinner sp_category = (Spinner) view.findViewById(R.id.spinnerCategory);
         EditText et_distance = (EditText) view.findViewById(R.id.et_distance);
 
         Integer distance;
-        if(et_distance.getText().toString().trim()=="")
-            distance= 10;
-        else
+
+        try{
             distance = Integer.parseInt(et_distance.getText().toString().trim());
+        }
+        catch (NumberFormatException nfe)
+        {
+            distance =10;
+        }
+
 
         String category = sp_category.getSelectedItem().toString();
         Log.d(TAG, keyword);
         Log.d(TAG, destination.getText().toString());
         Log.d(TAG, category);
         Log.d(TAG, String.valueOf(distance));
-
+        Log.d(TAG, "Latitude: "+lat);
+        Log.d(TAG, "Longitude: "+lon);
         String url = "http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword=USC&category=Default&distance=10&place=Boston";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
@@ -279,7 +249,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
             @Override
             public void onResponse(String response) {
 
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
 
                 try {
                     Log.d(TAG, "Submitted results"+response);
@@ -289,9 +259,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
 
                     for (int i = 0; i < array.length(); ++i) {
                         JSONObject res = array.getJSONObject(i);
-                       // Nearby place = new Nearby(res.getString("icon"), res.getString("name"),"http://cs-server.usc.edu:45678/hw/hw9/images/android/heart_outline_black.xml");
-                        //Log.d(TAG, res.getString("name"));
-                        //place_list.add(place);
+
                     }
 
                     Intent intent = new Intent(getActivity(), PlacesActivity.class);
@@ -299,10 +267,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                     startActivity(intent);
 
 
-                    //recycler_adapter = new PlaceSearchAdapter( getApplicationContext(),place_list);
-                    //recyclerView.setAdapter(recycler_adapter);
 
-                    //Log.d(TAG, jsonObject.getString("results"));
 
                 } catch (JSONException e) {
 
@@ -323,29 +288,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
 
 
     }
-   /* public void radcheck(View view1) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view1).isChecked();
 
-        // Check which radio button was clicked
-        switch (view1.getId()) {
-            case R.id.first:
-                if (checked) {
-                    Log.d(TAG, "radcheck1: ");
-                    destination.setEnabled(false);
-                }
-                break;
-            case R.id.second:
-                if (checked) {
-                    Log.d(TAG, "radcheck2: ");
-                    destination.setEnabled(true);
-
-                }
-                // Ninjas rule
-                break;
-        }
-    }
-*/
     private boolean validate()
     {
         final EditText keyword = view.findViewById(R.id.et_keyword);
@@ -431,13 +374,16 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-
+    public void onLocationChanged(Location location1) {
+        lat= location1.getLatitude();
+        lon= location1.getLongitude();
+        Log.d(TAG, "Location changed again");
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        locationManager.removeUpdates(this);
+        Log.d(TAG, "Location update initiated ");
     }
 
     @Override
