@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +26,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     SharedPreferences myprefs;
+    View view;
     // data is passed into the constructor
     PlaceSearchAdapter(Context context, List<JSONObject> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -34,7 +36,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recycler_view, parent, false);
+        view = mInflater.inflate(R.layout.recycler_view, parent, false);
         myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return new ViewHolder(view);
     }
@@ -71,10 +73,11 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                     @Override
                     public void onClick(View v) {
                         String placeid = null;
-
+                        String placename = "";
                         //boolean flag= false;
                         try{
                            placeid= js.get("place_id").toString();
+                           placename= js.get("name").toString();
                         }
                         catch (JSONException e)
                         {
@@ -84,10 +87,13 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                         {
 
                             SharedPreferences.Editor editor = myprefs.edit();
+
                             editor.putString(placeid,js.toString());
                             editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
                             holder.myPlaceFav.setTag(1);
+                            toastMessage(placename+" added to favorites");
+
 
 
 
@@ -99,6 +105,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                             editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resnofav);
                             holder.myPlaceFav.setTag(0);
+                            toastMessage(placename+" removed from favorites");
 
 
                         }
@@ -147,6 +154,17 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
+    }
+
+    private void toastMessage(String message)
+    {
+
+        Toast t = Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT);
+        //View v1 = t.getView();
+        //v1.setBackgroundColor(Integer.parseInt("#cccccc"));
+        t.show();
+
+        //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     // parent activity will implement this method to respond to click events

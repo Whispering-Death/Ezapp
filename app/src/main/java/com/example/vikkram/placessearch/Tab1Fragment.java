@@ -272,7 +272,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                 try {
                     Log.d(TAG, "Submitted results"+response);
                     JSONObject jsonObject = new JSONObject(response);
-                    Toast.makeText(getContext(), "No Error", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "No Error", Toast.LENGTH_SHORT).show();
                     JSONArray array = jsonObject.getJSONArray("results");
 
                     for (int i = 0; i < array.length(); ++i) {

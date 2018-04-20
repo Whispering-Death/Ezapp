@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +25,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     private List<JSONObject> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    View view;
     SharedPreferences myprefs;
     // data is passed into the constructor
     FavAdapter(Context context, List<JSONObject> data) {
@@ -34,7 +36,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recycler_favorites, parent, false);
+        view = mInflater.inflate(R.layout.recycler_favorites, parent, false);
         myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return new ViewHolder(view);
     }
@@ -68,10 +70,11 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
                         String placeid = null;
                         try {
                             placeid = js.get("place_id").toString();
+                            String name = js.get("name").toString();
                             SharedPreferences.Editor editor = myprefs.edit();
                             editor.remove(placeid);
                             mData.remove(position);
-
+                            toastMessage(name+" removed from favorites");
                             editor.commit();
                             notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -116,10 +119,20 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     }
 
     // convenience method for getting data at click position
+
     JSONObject getItem(int id) {
         return mData.get(id);
     }
+    private void toastMessage(String message)
+    {
 
+        Toast t = Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT);
+        //View v1 = t.getView();
+        //v1.setBackgroundColor(Integer.parseInt("#cccccc"));
+        t.show();
+
+        //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
