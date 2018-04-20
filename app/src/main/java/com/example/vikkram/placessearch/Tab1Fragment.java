@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.concurrent.Executor;
 
 public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -137,11 +139,13 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                     case R.id.first:
 
                         Log.d(TAG, "radcheck1: ");
+                        destination.setText("");
                         destination.setEnabled(false);
                         break;
                     case R.id.second:
                         // Fragment 2
                         Log.d(TAG, "radcheck2: ");
+
                         destination.setEnabled(true);
                         break;
                 }
@@ -234,16 +238,30 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
             distance =10;
         }
 
-
-        String category = sp_category.getSelectedItem().toString();
+        RadioButton second = (RadioButton) view.findViewById(R.id.second);
+        String category = sp_category.getSelectedItem().toString().trim();
+        category = category.replaceAll(" ","_");
         Log.d(TAG, keyword);
         Log.d(TAG, destination.getText().toString());
         Log.d(TAG, category);
         Log.d(TAG, String.valueOf(distance));
         Log.d(TAG, "Latitude: "+lat);
         Log.d(TAG, "Longitude: "+lon);
-        String url = "http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword=USC&category=Default&distance=10&place=Boston";
+        String url="";
 
+        if(second.isChecked())
+        {
+            Log.d(TAG, "getJSONData: "+destination.getText().toString());
+            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+keyword+"&category="+category+"&distance="+distance+"&place="+ URLEncoder.encode(destination.getText().toString());
+
+        }
+        else
+        {
+            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+keyword+"&category="+category+"&distance="+distance+"&lat="+lat+"&lon="+lon;
+
+        }
+
+        Log.d(TAG, "URL: "+url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url, new Response.Listener<String>() {
             @Override
@@ -277,7 +295,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error" + error.toString(), Toast.LENGTH_SHORT).show();
 
             }
