@@ -85,7 +85,7 @@ import static android.content.Context.MODE_PRIVATE;
             */
             return view;
         }
-    
+
         @Override
         public void onResume() {
             super.onResume();
