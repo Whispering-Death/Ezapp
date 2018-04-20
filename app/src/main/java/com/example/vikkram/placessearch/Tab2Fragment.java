@@ -85,6 +85,49 @@ import static android.content.Context.MODE_PRIVATE;
             */
             return view;
         }
+    
+        @Override
+        public void onResume() {
+            super.onResume();
+            SharedPreferences myPrefs = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            ArrayList<JSONObject> favorites = new ArrayList<>();
+            Map<String, ?> entries = myPrefs.getAll();
+            //JSONParser parser = new JSONParser();
+            TextView nofav = getView().findViewById(R.id.nofavorites);
+            boolean isEmpty = true;
+            super.onStart();
+            for(Map.Entry<String,?> entry: entries.entrySet())
+            {
+                Log.d(TAG, "JSON value obtained:" );
+                Log.d(TAG, entry.getValue().toString());
+                isEmpty= false;
+                String jsonData = entry.getValue().toString();
+
+                try {
+                    JSONObject js = new JSONObject(jsonData);
+                    favorites.add(js);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if(!isEmpty)
+            {
+                nofav.setVisibility(View.GONE);
+            }
+            else
+            {
+                nofav.setVisibility(View.VISIBLE);
+            }
+            RecyclerView recyclerView = getView().findViewById(R.id.favcontainer);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            adapter = new FavAdapter(getContext(), favorites);
+            //adapter.setClickListener(this);
+
+            //recyclerView.invalidate();
+            recyclerView.setAdapter(adapter);
+        }
 
         @Override
         public void onStart() {
@@ -123,6 +166,8 @@ import static android.content.Context.MODE_PRIVATE;
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             adapter = new FavAdapter(getContext(), favorites);
             //adapter.setClickListener(this);
+
+            //recyclerView.invalidate();
             recyclerView.setAdapter(adapter);
         }
     }
