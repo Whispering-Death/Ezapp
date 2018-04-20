@@ -54,8 +54,10 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
             if(myprefs.contains(placeid))
             {
                 holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
-                holder.myPlaceFav.setTag("fav");
+                holder.myPlaceFav.setTag(1);
             }
+            else
+                holder.myPlaceFav.setTag(0);
             //placeid = js.get("place_id").toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -70,6 +72,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                     public void onClick(View v) {
                         String placeid = null;
 
+                        //boolean flag= false;
                         try{
                            placeid= js.get("place_id").toString();
                         }
@@ -77,13 +80,15 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                         {
                             e.printStackTrace();
                         }
-                        if(holder.myPlaceFav.getTag() == "nofav")
+                        if(Integer.parseInt(holder.myPlaceFav.getTag().toString())==0)
                         {
+
                             SharedPreferences.Editor editor = myprefs.edit();
                             editor.putString(placeid,js.toString());
                             editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
-                            holder.myPlaceFav.setTag("fav");
+                            holder.myPlaceFav.setTag(1);
+
 
 
                         }
@@ -93,7 +98,8 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                             editor.remove(placeid);
                             editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resnofav);
-                            holder.myPlaceFav.setTag("nofav");
+                            holder.myPlaceFav.setTag(0);
+
 
                         }
 
