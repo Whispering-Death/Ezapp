@@ -31,4 +31,5 @@
         <item>Travel Agency</item>
         <item>Zoo</item>
     </string-array>
+    <string name="title_activity_placeinfo">placeinfo</string>
 </resources>
