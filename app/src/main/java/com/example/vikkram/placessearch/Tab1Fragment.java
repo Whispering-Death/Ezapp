@@ -81,12 +81,21 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         Context c1 = getActivity().getApplicationContext();
         destination = (AutoCompleteTextView)  view.findViewById(R.id.atv_destination);
         locationManager = (LocationManager) c1.getSystemService(c1.LOCATION_SERVICE);
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
+
+        if(mGoogleApiClient == null || !mGoogleApiClient.isConnected()){
+            try {
+                mGoogleApiClient = new GoogleApiClient
+                        .Builder(getContext())
+                        .addApi(Places.GEO_DATA_API)
+                        .addApi(Places.PLACE_DETECTION_API)
+                        .enableAutoManage(getActivity(), this)
+                        .build();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, LAT_LNG_BOUNDS, null);
 

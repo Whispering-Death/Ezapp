@@ -1,6 +1,7 @@
 package com.example.vikkram.placessearch;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +16,15 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.ViewHolder> {
 
     private List<JSONObject> mData;
     private List<String> placeIcon;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-
+    SharedPreferences myprefs;
     // data is passed into the constructor
     PlaceSearchAdapter(Context context, List<JSONObject> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -32,37 +35,63 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recycler_view, parent, false);
+        myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        JSONObject js = mData.get(position);
+        final JSONObject js = mData.get(position);
 
         String animal = null;
         String placeIcon = null;
-
+        //final String placeid= null;
         try {
             animal = js.get("name").toString();
             placeIcon= js.get("icon").toString();
+            String placeid= js.get("place_id").toString();
+            if(myprefs.contains(placeid))
+            {
+                holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
+                holder.myPlaceFav.setTag("fav");
+            }
+            //placeid = js.get("place_id").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
         holder.myTextView.setText(animal);
         Picasso.get().load(placeIcon).into(holder.myPlaceIcon);
         holder.myPlaceFav.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String placeid = null;
+
+                        try{
+                           placeid= js.get("place_id").toString();
+                        }
+                        catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
                         if(holder.myPlaceFav.getTag() == "nofav")
                         {
+                            SharedPreferences.Editor editor = myprefs.edit();
+                            editor.putString(placeid,js.toString());
+                            editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
                             holder.myPlaceFav.setTag("fav");
+
 
                         }
                         else
                         {
+                            SharedPreferences.Editor editor = myprefs.edit();
+                            editor.remove(placeid);
+                            editor.commit();
                             holder.myPlaceFav.setImageResource(R.drawable.ic_resnofav);
                             holder.myPlaceFav.setTag("nofav");
 

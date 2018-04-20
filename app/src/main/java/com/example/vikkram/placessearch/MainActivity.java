@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_search);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_placefav);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new Tab1Fragment(), "Search");
-        adapter.addFragment(new Tab2Fragment(), "TAB2");
+        adapter.addFragment(new Tab2Fragment(), "Favorites");
         adapter.addFragment(new Tab3Fragment(), "TAB3");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(1);
     }
 }
