@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,16 +37,41 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         JSONObject js = mData.get(position);
 
         String animal = null;
+        String placeIcon = null;
+
         try {
             animal = js.get("name").toString();
+            placeIcon= js.get("icon").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         holder.myTextView.setText(animal);
+        Picasso.get().load(placeIcon).into(holder.myPlaceIcon);
+        holder.myPlaceFav.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.myPlaceFav.getTag() == "nofav")
+                        {
+                            holder.myPlaceFav.setImageResource(R.drawable.ic_resfav);
+                            holder.myPlaceFav.setTag("fav");
+
+                        }
+                        else
+                        {
+                            holder.myPlaceFav.setImageResource(R.drawable.ic_resnofav);
+                            holder.myPlaceFav.setTag("nofav");
+
+                        }
+
+                    }
+                }
+        );
+        //Picasso.get().load(R.drawable.ic_search).into(holder.myPlaceFav);
     }
 
     // total number of rows
@@ -57,10 +85,17 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
 
+        ImageView myPlaceIcon;
+        ImageView myPlaceFav;
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.place_name);
-            itemView.setOnClickListener(this);
+            myPlaceIcon = itemView.findViewById(R.id.place_icon);
+            myPlaceFav = itemView.findViewById(R.id.place_nofav);
+
+            //itemView.setOnClickListener(this);
+
+
         }
 
         @Override
