@@ -28,7 +28,7 @@
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/place_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

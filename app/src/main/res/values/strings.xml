@@ -31,6 +31,17 @@
         <item>Travel Agency</item>
         <item>Zoo</item>
     </string-array>
+    <string-array name="reviews_array">
+        <item>Google Reviews</item>
+        <item>Yelp Reviews</item>
+    </string-array>
+    <string-array name="sorting_array">
+        <item>Default Order</item>
+        <item>Highest Rating</item>
+        <item>Lowest Rating</item>
+        <item>Most Recent</item>
+        <item>Least Recent</item>
+    </string-array>
     <string name="title_activity_placeinfo">placeinfo</string>
     <string name="title_activity_places_info">PlacesInfo</string>
     <string name="tab_text_1">Tab 1</string>

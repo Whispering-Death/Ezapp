@@ -25,7 +25,7 @@ public class Tab3Fragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "TESTING BUTTON CLICK 3",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), PlacesActivity.class);
+                Intent intent = new Intent(getActivity(), PlacesInfo.class);
                 //intent.putExtra("places", jsonObject.toString());
                 startActivity(intent);
 
