@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,6 +88,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         getDeviceLocation();
 
         Button searchBtn = view.findViewById(R.id.btn_search);
+        Button clearBtn = view.findViewById(R.id.btn_clear);
 
         //searchBtn.setOnClickListener(this);
         final EditText keyword = view.findViewById(R.id.et_keyword);
@@ -130,7 +132,18 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                                      }
 
 
+
         );
+
+        clearBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clearform();
+                    }
+                }
+        );
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
@@ -152,16 +165,33 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
             }
         });
 
-/*        btnTEST.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "TESTING BUTTON CLICK 1",Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
+
         return view;
     }
 
+
+    private void clearform()
+    {
+        EditText et_keyword = (EditText) view.findViewById(R.id.et_keyword);
+        et_keyword.setText("");
+        EditText et_distance = (EditText) view.findViewById(R.id.et_distance);
+        et_distance.setText("");
+        RadioButton btn1= (RadioButton) view.findViewById(R.id.first);
+        Spinner mSpinner = (Spinner) view.findViewById(R.id.spinnerCategory);
+        String compareValue = "Default";
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.categories_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        if (compareValue != null) {
+            int spinnerPosition = adapter.getPosition(compareValue);
+            mSpinner.setSelection(spinnerPosition);
+        }
+
+        btn1.setChecked(true);
+        destination.setText("");
+        destination.setEnabled(false);
+
+    }
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
