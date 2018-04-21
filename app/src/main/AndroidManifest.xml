@@ -32,8 +32,8 @@
         </activity>
         <activity android:name=".PlacesActivity" />
         <activity
-            android:name=".placeinfo"
-            android:label="@string/title_activity_placeinfo"
+            android:name=".PlacesInfo"
+            android:label="@string/title_activity_places_info"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

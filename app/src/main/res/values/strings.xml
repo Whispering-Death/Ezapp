@@ -32,4 +32,8 @@
         <item>Zoo</item>
     </string-array>
     <string name="title_activity_placeinfo">placeinfo</string>
+    <string name="title_activity_places_info">PlacesInfo</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
 </resources>

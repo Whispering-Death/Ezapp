@@ -1,5 +1,6 @@
 package com.example.vikkram.placessearch;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +24,11 @@ public class Tab3Fragment extends Fragment{
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "TESTING BUTTON CLICK 3",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "TESTING BUTTON CLICK 3",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), PlacesActivity.class);
+                //intent.putExtra("places", jsonObject.toString());
+                startActivity(intent);
+
             }
         });
 
