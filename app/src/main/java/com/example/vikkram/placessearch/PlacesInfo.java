@@ -1,5 +1,6 @@
 package com.example.vikkram.placessearch;
 
+import android.icu.text.IDNA;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,16 +21,50 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class PlacesInfo extends AppCompatActivity {
 
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
+    private static final String TAG = "PlacesInfo";
 
+    JSONObject js = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_info);
+
+
+        String jsonData = getIntent().getStringExtra("placeinfo");
+
+
+        //JSONObject js=null;
+        try {
+            js = new JSONObject(jsonData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject placedetails = null;
+        try {
+            placedetails = js.getJSONObject("result");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String formatted_address="";
+
+        try {
+            formatted_address =placedetails.getString("vicinity");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "JSON data received in Places Info: "+formatted_address);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,13 +83,27 @@ public class PlacesInfo extends AppCompatActivity {
 
 
     }
-
+    public JSONObject getJSONData()
+    {
+        return js;
+    }
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new InfoFragment(), "Info");
-        adapter.addFragment(new PhotoFragment(), "Photos");
-        adapter.addFragment(new MapFragment(), "Map");
-        adapter.addFragment(new ReviewFragment(), "Reviews");
+        Bundle bundle = new Bundle();
+        bundle.putString("placedetails",js.toString());
+        InfoFragment tab1 = new InfoFragment();
+        PhotoFragment tab2 = new PhotoFragment();
+        MapFragment tab3 = new MapFragment();
+        ReviewFragment tab4 = new ReviewFragment();
+        tab1.setArguments(bundle);
+        tab2.setArguments(bundle);
+        tab3.setArguments(bundle);
+        tab4.setArguments(bundle);
+
+        adapter.addFragment(tab1, "Info");
+        adapter.addFragment(tab2, "Photos");
+        adapter.addFragment(tab3, "Map");
+        adapter.addFragment(tab4, "Reviews");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(1);
     }
