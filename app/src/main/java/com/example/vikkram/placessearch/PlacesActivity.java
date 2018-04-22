@@ -113,7 +113,7 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
                     Intent intent = new Intent(PlacesActivity.this, PlacesInfo.class);
                     intent.putExtra("placeinfo", jsonObject.toString());
                     startActivity(intent);
-                    
+
 
 
 
