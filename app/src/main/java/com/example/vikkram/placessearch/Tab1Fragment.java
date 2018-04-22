@@ -267,7 +267,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         progressDialog.setMessage("Fetching results");
         progressDialog.show();
         EditText et_keyword = (EditText) view.findViewById(R.id.et_keyword);
-        String keyword = et_keyword.getText().toString();
+        String keyword = et_keyword.getText().toString().trim();
         Spinner sp_category = (Spinner) view.findViewById(R.id.spinnerCategory);
         EditText et_distance = (EditText) view.findViewById(R.id.et_distance);
 
