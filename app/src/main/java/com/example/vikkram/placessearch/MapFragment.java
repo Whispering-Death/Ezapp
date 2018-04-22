@@ -3,9 +3,11 @@ package com.example.vikkram.placessearch;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,10 +29,21 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         mapFragment.getMapAsync(this);
         return view;
     }
-
+    
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng sydney = new LatLng(-33.852, 151.211);
+
+        AutoCompleteTextView atv = (AutoCompleteTextView)view.findViewById(R.id.map_atv_destination);
+        
+        atv.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: ");
+                    }
+                }
+        );
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title("Marker in Sydney"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));

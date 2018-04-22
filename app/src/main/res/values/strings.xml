@@ -42,6 +42,13 @@
         <item>Most Recent</item>
         <item>Least Recent</item>
     </string-array>
+
+    <string-array name="travel_modes">
+        <item>Driving</item>
+        <item>Bicycling</item>
+        <item>Transit</item>
+        <item>Walking</item>
+    </string-array>
     <string name="title_activity_placeinfo">placeinfo</string>
     <string name="title_activity_places_info">PlacesInfo</string>
     <string name="tab_text_1">Tab 1</string>
