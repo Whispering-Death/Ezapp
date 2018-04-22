@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -73,6 +75,10 @@ public class PlacesInfo extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.place_tabs);
         //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+
+
+
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_info_outline);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_photos);
