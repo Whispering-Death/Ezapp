@@ -1,6 +1,7 @@
 package com.example.vikkram.placessearch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = mInflater.inflate(R.layout.recycler_view, parent, false);
+        //view.setOnClickListener(this);
         myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return new ViewHolder(view);
     }
@@ -50,7 +52,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
         String placeIcon = null;
         //final String placeid= null;
         try {
-            animal = js.get("name").toString();
+            animal = js.get("name").toString()+"\n"+js.get("vicinity");
             placeIcon= js.get("icon").toString();
             String placeid= js.get("place_id").toString();
             if(myprefs.contains(placeid))
@@ -68,6 +70,9 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
 
         holder.myTextView.setText(animal);
         Picasso.get().load(placeIcon).into(holder.myPlaceIcon);
+
+
+
         holder.myPlaceFav.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -113,6 +118,8 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
                     }
                 }
         );
+
+
         //Picasso.get().load(R.drawable.ic_search).into(holder.myPlaceFav);
     }
 
@@ -135,14 +142,15 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
             myPlaceIcon = itemView.findViewById(R.id.place_icon);
             myPlaceFav = itemView.findViewById(R.id.place_nofav);
 
-            //itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
 
 
         }
 
         @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        public void onClick(View view1){
+            if (mClickListener != null) mClickListener.onItemClick(view1, getAdapterPosition());
+
         }
     }
 
@@ -152,6 +160,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     }
 
     // allows clicks events to be caught
+
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }

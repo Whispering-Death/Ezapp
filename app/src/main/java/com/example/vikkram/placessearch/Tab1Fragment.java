@@ -19,10 +19,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -37,9 +40,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,7 +58,7 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.concurrent.Executor;
 
-public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, LocationListener,Filterable {
 
     private static final String TAG = "Tab1Fragment";
     private FusedLocationProviderClient mFusedLocationClient;
@@ -165,6 +170,14 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
             }
         });
 
+
+        destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Item clicked: "+destination.getText().toString());
+
+            }
+        } );
 
         return view;
     }
@@ -442,5 +455,10 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    public Filter getFilter() {
+        return null;
     }
 }

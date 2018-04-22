@@ -10,17 +10,23 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/place_icon"/>
+        android:id="@+id/place_icon"
+
+        android:src="@drawable/ic_resfav"/>
     <TextView
         android:id="@+id/place_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:text="GRGSBgs"
+        android:layout_weight="1"/>
 
     <ImageView
+        android:id="@+id/place_nofav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:src="@drawable/ic_resnofav"
-        android:id="@+id/place_nofav"/>
+       />
 
 </LinearLayout>

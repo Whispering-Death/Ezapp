@@ -59,11 +59,11 @@ public class Tab3Fragment extends Fragment{
                                 JSONObject res = array.getJSONObject(i);
 
                             }*/
-
+                            /*
                             Intent intent = new Intent(getActivity(), PlacesInfo.class);
                             intent.putExtra("placeinfo", jsonObject.toString());
                             startActivity(intent);
-
+                            */
 
 
 
