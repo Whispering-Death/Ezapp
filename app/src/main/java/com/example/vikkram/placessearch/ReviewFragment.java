@@ -3,6 +3,8 @@ package com.example.vikkram.placessearch;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class ReviewFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener{
 
     private static final String TAG = "ReviewFragment";
+    private static ReviewAdapter adapter;
     View view;
     @Nullable
     @Override
@@ -49,12 +52,18 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         }
         
         Spinner reviewType = view.findViewById(R.id.reviewCategory);
-        
+        Log.d(TAG, "onCreateView: "+google_reviews);
         Spinner sortType = view.findViewById(R.id.sortingCategory);
         Log.d(TAG, "Google reviews: "+google_reviews);
         reviewType.setOnItemSelectedListener(this);
         sortType.setOnItemSelectedListener(this);
+        RecyclerView recyclerView = view.findViewById(R.id.revcontainer);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ReviewAdapter(getContext(), google_reviews, true );
+        //adapter.setClickListener(this);
 
+        //recyclerView.invalidate();
+        recyclerView.setAdapter(adapter);
         /*
         reviewType.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
