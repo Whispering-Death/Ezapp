@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import com.squareup.picasso.Picasso;
-
+import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,11 +72,35 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         String text = "";
 
         set(js,"author_name",holder.name);
-       set(js,"time",holder.date);
-        //set(js,"rating",holder.rating);
-        //set(js,"text",holder.review);
 
-         // holder.name.setText("afridi");
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        //long time =0;
+        try {
+            Date revData = new Date(js.getLong("time")*1000L);
+            Log.d(TAG, "Time: " +simpleDateFormat.format(revData));
+            holder.date.setText(simpleDateFormat.format(revData));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        set(js,"rating",holder.rating);
+        set(js,"text",holder.review);
+
+        try {
+            photo_url = js.getString("profile_photo_url");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(photo_url!="")
+        {
+            Log.d(TAG, "Photo found ");
+            Picasso.get().load(photo_url).into(holder.photo);
+
+        }
+        // holder.name.setText("afridi");
 
         //set(js,"author_name",holder.name);
 
