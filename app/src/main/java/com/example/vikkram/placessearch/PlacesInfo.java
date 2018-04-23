@@ -38,7 +38,7 @@ public class PlacesInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_info);
-
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         String jsonData = getIntent().getStringExtra("placeinfo");
 
@@ -130,6 +130,8 @@ public class PlacesInfo extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Log.d(TAG, "onOptionsItemSelected: ");
             return true;
         }
 

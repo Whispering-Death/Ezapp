@@ -42,12 +42,14 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
+      
         pageTokens = new ArrayList<>();
         ArrayList<String> animalNames = new ArrayList<>();
         jsonList1= new ArrayList<>();
         jsonList2= new ArrayList<>();
         jsonList = new ArrayList<>();
         String jsonData = getIntent().getStringExtra("places");
+
 
 
         if(getIntent().getStringExtra("token")!= null)
