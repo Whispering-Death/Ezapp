@@ -96,6 +96,7 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
         Log.d(TAG, "Place id found: "+placeid);
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Fetching place details");
+        progressDialog.show();
         //String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4";
         String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid="+placeid;
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
