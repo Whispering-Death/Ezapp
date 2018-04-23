@@ -114,13 +114,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             }
         }
 
-        set(js,"rating",holder.rating);
+        //set(js,"rating",holder.rating);
 
         try {
             holder.ratingBar.setRating(js.getInt("rating"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
         set(js,"text",holder.review);
 
         if(this.isgoogle)
@@ -183,7 +185,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         ViewHolder(View itemView) {
             super(itemView);
             name= itemView.findViewById(R.id.author_name);
-            rating = itemView.findViewById(R.id.rating);
+            //rating = itemView.findViewById(R.id.rating);
             review=  itemView.findViewById(R.id.review_text);
             date= itemView.findViewById(R.id.date);
             photo= itemView.findViewById(R.id.photo);
