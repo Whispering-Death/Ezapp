@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.sql.Timestamp;
@@ -114,6 +115,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         }
 
         set(js,"rating",holder.rating);
+
+        try {
+            holder.ratingBar.setRating(js.getInt("rating"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         set(js,"text",holder.review);
 
         if(this.isgoogle)
@@ -171,6 +178,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         TextView rating;
         ImageView photo;
         TextView review;
+
+        RatingBar ratingBar;
         ViewHolder(View itemView) {
             super(itemView);
             name= itemView.findViewById(R.id.author_name);
@@ -178,6 +187,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             review=  itemView.findViewById(R.id.review_text);
             date= itemView.findViewById(R.id.date);
             photo= itemView.findViewById(R.id.photo);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
 
 
 

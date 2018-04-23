@@ -32,6 +32,7 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     PlaceSearchAdapter(Context context, List<JSONObject> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        setHasStableIds(true);
     }
 
     // inflates the row layout from xml when needed
@@ -175,7 +176,15 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
 
         //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);

@@ -38,6 +38,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = mInflater.inflate(R.layout.recycler_favorites, parent, false);
         myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        //setHasStableIds(true);
         return new ViewHolder(view);
     }
 
@@ -137,7 +138,15 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
