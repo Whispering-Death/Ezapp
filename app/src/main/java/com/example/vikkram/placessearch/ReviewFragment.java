@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,9 +50,13 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         JSONObject json= ((PlacesInfo)this.getActivity()).js;
         google_reviews = new ArrayList<>();
         default_google_reviews= new ArrayList<>();
+        yelp_reviews = new ArrayList<>();
+        default_yelp_reviews= new ArrayList<>();
         getDefaultReviews(true);
         default_google_reviews.addAll(google_reviews);
         getYelpReviews();
+        default_yelp_reviews.addAll(yelp_reviews);
+
 
         /*
         JSONArray reviewData= new JSONArray();
@@ -110,7 +115,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
     public void getYelpReviews()
     {
 
-        String url="";
+        //String url="";
         String country="";
         String state= "";
         String city="";
@@ -178,6 +183,25 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
         //Log.d(TAG, "getYelpReviews: ");
 
+        String vicinity="";
+        String name="";
+        try {
+            vicinity = results.getString("vicinity");
+            name = results.getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Log.d(TAG, "Parameters: "+vicinity+" "+name);
+
+        String url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/yelpSearch?country="+ URLEncoder.encode(country)+
+                "&state="+URLEncoder.encode(state)
+                +"&address="+URLEncoder.encode(vicinity)+"&city="+URLEncoder.encode(city)+
+                "&name="+URLEncoder.encode(name);
+
+        Log.d(TAG, "URL request: "+url);
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url, new Response.Listener<String>() {
             @Override
@@ -185,15 +209,16 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
                 try {
                     Log.d(TAG, "Submitted results"+response);
-                    JSONObject jsonObject = new JSONObject(response);
-                    //Toast.makeText(getContext(), "No Error", Toast.LENGTH_SHORT).show();
-                    JSONArray array = jsonObject.getJSONArray("results");
+                    JSONArray yelpJSON = new JSONArray(response);
 
-                    for (int i = 0; i < array.length(); ++i) {
-                        JSONObject res = array.getJSONObject(i);
+                    for(int i=0;i<yelpJSON.length();++i)
+                    {
+                        yelp_reviews.add(yelpJSON.getJSONObject(i));
 
                     }
 
+
+                    //Log.d(TAG, "Final Yelp Reviews: "+yelp_reviews);
 
 
                 } catch (JSONException e) {
@@ -212,7 +237,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
-        
+
 
     }
 
@@ -349,10 +374,17 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         //Log.d(TAG, "onItemSelected: "+parent.getItemAtPosition(position).getClass());
 
         String item= parent.getItemAtPosition(position).toString();
-
+        int sel_pos = parent.getSelectedItemPosition();
         if(item.equals("Gooogle Reviews") || item.equals("Yelp Reviews"))
         {
             Log.d(TAG, "Either google or yelp was selected");
+            if(sel_pos==1)
+            {
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false );
+
+                recyclerView.setAdapter(adapter);
+            }
+
         }
 
         else

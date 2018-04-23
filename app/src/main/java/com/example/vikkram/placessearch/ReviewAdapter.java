@@ -71,34 +71,81 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         String rating="";
         String text = "";
 
-        set(js,"author_name",holder.name);
+        if(this.isgoogle)
+            set(js,"author_name",holder.name);
+
+        else
+        {
+
+            try {
+                String yelp_name = js.getJSONObject("user").get("name").toString();
+                holder.name.setText(yelp_name);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
 
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
         //long time =0;
-        try {
-            Date revData = new Date(js.getLong("time")*1000L);
-            Log.d(TAG, "Time: " +simpleDateFormat.format(revData));
-            holder.date.setText(simpleDateFormat.format(revData));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(this.isgoogle)
+        {
+            try {
+                Date revData = new Date(js.getLong("time")*1000L);
+                Log.d(TAG, "Time: " +simpleDateFormat.format(revData));
+                holder.date.setText(simpleDateFormat.format(revData));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+        else
+        {
+            try {
+
+                holder.date.setText(js.getString("time_created"));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         set(js,"rating",holder.rating);
         set(js,"text",holder.review);
 
-        try {
-            photo_url = js.getString("profile_photo_url");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(this.isgoogle)
+        {
+            try {
+                photo_url = js.getString("profile_photo_url");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(photo_url!="")
+            {
+                Log.d(TAG, "Photo found ");
+                Picasso.get().load(photo_url).into(holder.photo);
+
+            }
         }
 
-        if(photo_url!="")
+        else
         {
-            Log.d(TAG, "Photo found ");
-            Picasso.get().load(photo_url).into(holder.photo);
+            String yelp_photo="";
+            try {
+                yelp_photo = js.getJSONObject("user").get("image_url").toString();
+                //holder.name.setText(yelp_name);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+            if(yelp_photo!="")
+            {
+                Picasso.get().load(yelp_photo).resize(200,100).into(holder.photo);
+            }
         }
         // holder.name.setText("afridi");
 
