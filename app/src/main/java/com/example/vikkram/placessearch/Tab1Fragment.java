@@ -316,14 +316,26 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
                     Log.d(TAG, "Submitted results"+response);
                     JSONObject jsonObject = new JSONObject(response);
                     //Toast.makeText(getContext(), "No Error", Toast.LENGTH_SHORT).show();
-                    JSONArray array = jsonObject.getJSONArray("results");
 
+                    JSONArray array = jsonObject.getJSONArray("results");
+                    String pagetoken = "";
+
+                    try{
+                        pagetoken= jsonObject.getString("next_page_token");
+                    }
+                    catch(JSONException e)
+                    {
+                        ;
+                    }
                     for (int i = 0; i < array.length(); ++i) {
                         JSONObject res = array.getJSONObject(i);
 
                     }
 
                     Intent intent = new Intent(getActivity(), PlacesActivity.class);
+
+                    if(pagetoken!="")
+                        intent.putExtra("token",pagetoken);
                     intent.putExtra("places", jsonObject.toString());
                     startActivity(intent);
 
