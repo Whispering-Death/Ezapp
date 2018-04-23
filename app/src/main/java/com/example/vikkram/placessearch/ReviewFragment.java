@@ -27,10 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
+import java.text.SimpleDateFormat;
 public class ReviewFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener{
 
     private static final String TAG = "ReviewFragment";
@@ -299,6 +300,36 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         });
 
     }
+
+
+    public void customsort_yelp_timings(final boolean asc)
+    {
+        Collections.sort( yelp_reviews, new Comparator<JSONObject>() {
+            //You can change "Name" with "ID" if you want to sort by ID
+            private static final String KEY_NAME = "time_created";
+
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                String valA="";
+                String valB="";
+                DateFormat f = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss ");
+                try {
+                    valA =  a.getString(KEY_NAME);
+                    valB =  b.getString(KEY_NAME);
+                }
+                catch (JSONException e) {
+                    //do something
+                }
+                if(asc)
+                    return valA.compareTo(valB);
+                else
+                    return valB.compareTo(valA);
+                //if you want to change the sort order, simply use the following:
+                //return -valA.compareTo(valB);
+            }
+        });
+
+    }
     public void customsort_ratings(final boolean asc)
     {
         Collections.sort( google_reviews, new Comparator<JSONObject>() {
@@ -325,44 +356,131 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             }
         });
     }
+
+    public void customsort_yelp_ratings(final boolean asc)
+    {
+        Collections.sort( yelp_reviews, new Comparator<JSONObject>() {
+            //You can change "Name" with "ID" if you want to sort by ID
+            private static final String KEY_NAME = "rating";
+
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                int valA=0;
+                int valB=0;
+                try {
+                    valA =  a.getInt(KEY_NAME);
+                    valB =  b.getInt(KEY_NAME);
+                }
+                catch (JSONException e) {
+                    //do something
+                }
+                if(asc)
+                    return valA-valB;
+                else
+                    return valB-valA;
+                //if you want to change the sort order, simply use the following:
+                //return -valA.compareTo(valB);
+            }
+        });
+    }
     public void customsort(String sorting, int choice)
     {
         Log.d(TAG, "customsort called "+choice);
+
+        Spinner reviewType = view.findViewById(R.id.reviewCategory);
+
+        int pos= reviewType.getSelectedItemPosition();
+
+        String selection =  reviewType.getSelectedItem().toString();
+        //Log.d(TAG, "Custom review position: "+ reviewType.getSelectedItem().toString());
+        boolean isgoogle = true;
+        if(!selection.equals("Google Reviews"))
+        {
+            isgoogle=false;
+        }
+
         if(choice == 0)
         {
             //Log.d(TAG, "Default reviews: "+default_google_reviews);
             //google_reviews= new ArrayList<>();
             //google_reviews.addAll(default_google_reviews);
-            adapter = new ReviewAdapter(getContext(), default_google_reviews, true );
 
-            recyclerView.setAdapter(adapter);
+            if(isgoogle)
+            {
+                adapter = new ReviewAdapter(getContext(), default_google_reviews, true );
+
+                recyclerView.setAdapter(adapter);
+
+            }
+            else
+            {
+                Log.d(TAG, String.valueOf(default_yelp_reviews));
+                adapter = new ReviewAdapter(getContext(), default_yelp_reviews, false);
+
+                recyclerView.setAdapter(adapter);
+            }
 
 
         }
         else if(choice == 1 || choice==2)
         {
+
+            boolean asc;
             if(choice==2)
-                customsort_ratings(true);
+                asc= true;
             else
-                customsort_ratings(false);
+                asc= false;
 
+            if(isgoogle)
+            {
+                customsort_ratings(asc);
+                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+                //adapter.setClickListener(this);
+
+                //recyclerView.invalidate();
+                recyclerView.setAdapter(adapter);
+            }
+
+            else
+            {
+                customsort_yelp_ratings(asc);
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
+
+                recyclerView.setAdapter(adapter);
+
+            }
             //Log.d(TAG, "customsort result:  "+google_reviews);
-            adapter = new ReviewAdapter(getContext(), google_reviews, true );
-            //adapter.setClickListener(this);
 
-            //recyclerView.invalidate();
-            recyclerView.setAdapter(adapter);
         }
 
         else
         {
-            if(choice==4)
-                customsort_timings(true);
-            else
-                customsort_timings(false);
-            adapter = new ReviewAdapter(getContext(), google_reviews, true );
+            boolean asc;
 
-            recyclerView.setAdapter(adapter);
+            if(choice==4)
+                asc=true;
+            else
+                asc=false;
+            if(isgoogle)
+            {
+                customsort_timings(asc);
+                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+                //adapter.setClickListener(this);
+
+                //recyclerView.invalidate();
+                recyclerView.setAdapter(adapter);
+            }
+
+            else
+            {
+                customsort_yelp_timings(asc);
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
+
+                recyclerView.setAdapter(adapter);
+
+            }
+
+
 
         }
 
@@ -375,7 +493,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
         String item= parent.getItemAtPosition(position).toString();
         int sel_pos = parent.getSelectedItemPosition();
-        if(item.equals("Gooogle Reviews") || item.equals("Yelp Reviews"))
+        if(item.equals("Google Reviews") || item.equals("Yelp Reviews"))
         {
             Log.d(TAG, "Either google or yelp was selected");
             if(sel_pos==1)
@@ -391,6 +509,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         {
             Log.d(TAG, "Sorting type selection detected");
             customsort(item,parent.getSelectedItemPosition());
+
         }
        // Log.d(TAG, "onItemSelected: "+parent.getSelectedItemPosition());
 
