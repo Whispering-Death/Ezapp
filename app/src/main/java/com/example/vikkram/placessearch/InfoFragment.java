@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,7 @@ public class InfoFragment extends Fragment{
         TextView address = (TextView) view.findViewById(R.id.address);
         TextView number = (TextView) view.findViewById(R.id.number);
         TextView price = (TextView) view.findViewById(R.id.price);
-        TextView rating = (TextView) view.findViewById(R.id.rating);
+        RatingBar rating = (RatingBar) view.findViewById(R.id.ratingBar);
         TextView google = (TextView) view.findViewById(R.id.googlepage);
         TextView website = (TextView) view.findViewById(R.id.site);
         JSONObject jsonData = null;
@@ -60,7 +61,7 @@ public class InfoFragment extends Fragment{
         address.setText("No data");
         number.setText("No data");
         price.setText("No data");
-        rating.setText("No data");
+        //rating.setText("No data");
         google.setText("No data");
         website.setText("No data");
 
@@ -88,7 +89,7 @@ public class InfoFragment extends Fragment{
                 //e.printStackTrace();
             }
             try {
-                rating.setText(jsonData.getString("rating"));
+                rating.setRating(Float.parseFloat(jsonData.getString("rating")));
             } catch (JSONException e) {
                 //e.printStackTrace();
             }

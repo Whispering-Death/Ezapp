@@ -91,13 +91,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="3dip" />
-        <TextView
-
-            android:layout_weight="2"
-            android:layout_width="0dp"
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rating"
-            android:padding="3dip" />
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="8dp"
+            android:isIndicator="true"
+            android:rating="3"
+             />
     </TableRow>
     <TableRow
         android:layout_width="match_parent"
