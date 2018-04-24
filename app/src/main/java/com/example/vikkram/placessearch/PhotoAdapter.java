@@ -17,6 +17,7 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
@@ -43,23 +44,41 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     @Override
     public PhotoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         geoDataClient = Places.getGeoDataClient(parent.getContext(),null);
-        view = mInflater.inflate(R.layout.photo_fragment, parent, false);
+        //view = mInflater.inflate(R.layout.photo_fragment, parent, false);
+        view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.photo_fragment, null);
 
         return  new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PhotoAdapter.ViewHolder holder, int position) {
-        Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(mData.get(position));
-        PlacePhotoResponse photo = photoResponse.getResult();
-        Bitmap photoBitmap = photo.getBitmap();
-        holder.myPhoto.setImageBitmap(photoBitmap);
+
+        getPhoto(holder, mData, position);
+
+
+        Log.d(TAG, "onBindViewHolder:"+"set data");
 
     }
 
+    public void getPhoto(final PhotoAdapter.ViewHolder holder, List<PlacePhotoMetadata> mData, int pos)
+    {
+        Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(mData.get(pos));
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                PlacePhotoResponse photo = task.getResult();
+                Bitmap photoBitmap = photo.getBitmap();
+                Log.d(TAG, "photo "+photo.toString());
+
+                //placeImage.invalidate();
+                holder.myPhoto.setImageBitmap(photoBitmap);
+            }
+        });
+    }
     @Override
     public int getItemCount() {
-        return 0;
+        return mData.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

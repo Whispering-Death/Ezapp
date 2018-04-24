@@ -503,6 +503,13 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
                 recyclerView.setAdapter(adapter);
             }
 
+            else
+            {
+                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+
+                recyclerView.setAdapter(adapter);
+            }
+
         }
 
         else

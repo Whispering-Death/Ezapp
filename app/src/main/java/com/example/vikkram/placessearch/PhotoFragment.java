@@ -35,67 +35,72 @@ public class PhotoFragment extends android.support.v4.app.Fragment{
     private static PhotoAdapter adapter;
 
     View view;
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.photo_adapter, container, false);
 
 
-        geoDataClient = Places.getGeoDataClient(getContext(),null);
+
+
+    private void getPhotoMetadata() {
         JSONObject json= ((PlacesInfo)this.getActivity()).js;
-        photosDataList = new ArrayList<>();
-        try {
-            String placeid=json.getJSONObject("result").getString("place_id");
-            getPhotoMetadata(placeid);
 
+
+
+        String place="";
+        try {
+            place=json.getJSONObject("result").getString("place_id");
         } catch (JSONException e) {
             e.printStackTrace();
+            return;
         }
 
-       // Log.d(TAG, "Place metadata: "+photosDataList.size());
-        RecyclerView recyclerView = view.findViewById(R.id.photo_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new PhotoAdapter(getContext(), photosDataList);
-        //adapter.setClickListener(this);
-
-        //recyclerView.invalidate();
-        recyclerView.setAdapter(adapter);
-        return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-    }
-
-    private void getPhotoMetadata(String placeId) {
-
         final Task<PlacePhotoMetadataResponse> photoResponse =
-                geoDataClient.getPlacePhotos(placeId);
-
+                geoDataClient.getPlacePhotos(place);
         photoResponse.addOnCompleteListener
                 (new OnCompleteListener<PlacePhotoMetadataResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
                         currentPhotoIndex = 0;
-
+                        photosDataList = new ArrayList<>();
                         PlacePhotoMetadataResponse photos = task.getResult();
                         PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
 
                         Log.d(TAG, "number of photos "+photoMetadataBuffer.getCount());
 
                         for(PlacePhotoMetadata photoMetadata : photoMetadataBuffer){
-                            photosDataList.add(photoMetadataBuffer.get(0).freeze());
+                            photosDataList.add(photoMetadataBuffer.get(currentPhotoIndex).freeze());
+                            ++currentPhotoIndex;
                             Log.d(TAG, "added ");
                         }
 
                         photoMetadataBuffer.release();
+                        RecyclerView recyclerView = view.findViewById(R.id.photo_recycler);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        adapter = new PhotoAdapter(getContext(), photosDataList);
+                        //adapter.setClickListener(this);
+
+                        //recyclerView.invalidate();
+                        recyclerView.setAdapter(adapter);
                         //displayPhoto();
                     }
                 });
         //Log.d(TAG, "Place metadata: "+photosDataList.size());
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.photo_adapter, container, false);
+
+
+        geoDataClient = Places.getGeoDataClient(getContext(),null);
+
+
+        getPhotoMetadata();
+
+
+
+
+
+        // Log.d(TAG, "Place metadata: "+photosDataList.size());
+
+        return view;
+    }
 }
