@@ -84,8 +84,17 @@ public class InfoFragment extends Fragment{
 
 
             try {
-                price.setText(jsonData.getString("price_level"));
+
+                int price_number = jsonData.getInt("price_level");
+                String dollars="";
+                for(int i=0;i<price_number;++i)
+                {
+                    dollars+="$";
+                }
+
+                price.setText(dollars);
             } catch (JSONException e) {
+
                 //e.printStackTrace();
             }
             try {
