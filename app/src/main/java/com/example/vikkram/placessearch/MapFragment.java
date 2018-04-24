@@ -68,7 +68,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         JSONObject json= ((PlacesInfo)this.getActivity()).js;
 
 
-        double ne_lat,ne_lng,sw_lat,sw_lng;
+        double ne_lat=0,ne_lng=0,sw_lat=0,sw_lng=0;
 
 
         try {
@@ -85,7 +85,10 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
             e.printStackTrace();
         }
 
+        LatLng north_east = new LatLng(ne_lat,ne_lng);
+        LatLng south_west = new LatLng(sw_lat,sw_lng);
 
+        LatLngBounds bound= new LatLngBounds(south_west,north_east);
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             try {
                 mGoogleApiClient = new GoogleApiClient
@@ -107,7 +110,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
             e.printStackTrace();
         }
 
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, LAT_LNG_BOUNDS, null);
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, bound, null);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
