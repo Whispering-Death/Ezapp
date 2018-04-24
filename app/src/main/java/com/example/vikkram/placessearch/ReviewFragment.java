@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.text.SimpleDateFormat;
-public class ReviewFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener{
+public class ReviewFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener,ReviewAdapter.ItemClickListener{
 
     private static final String TAG = "ReviewFragment";
     private static ReviewAdapter adapter;
@@ -88,8 +88,9 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         sortType.setOnItemSelectedListener(this);
         recyclerView = view.findViewById(R.id.revcontainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         adapter = new ReviewAdapter(getContext(), google_reviews, true );
-        //adapter.setClickListener(this);
+        adapter.setClickListener(this);
 
         //recyclerView.invalidate();
         recyclerView.setAdapter(adapter);
@@ -495,8 +496,11 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         //Log.d(TAG, "onItemSelected: "+parent.getItemAtPosition(position).getClass());
+        //Log.d(TAG, "onItemSelecte: ");
 
         String item= parent.getItemAtPosition(position).toString();
+        Log.d(TAG, "onItemSelected: "+item);
+        adapter.setClickListener(this);
         int sel_pos = parent.getSelectedItemPosition();
         if(item.equals("Google Reviews") || item.equals("Yelp Reviews"))
         {
@@ -532,5 +536,10 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d(TAG, "Review method clicked: ");
     }
 }

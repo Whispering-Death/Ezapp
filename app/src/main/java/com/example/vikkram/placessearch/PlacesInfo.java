@@ -4,6 +4,7 @@ import android.icu.text.IDNA;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -38,10 +39,11 @@ public class PlacesInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_info);
+        //this.getActionBar().setHomeButtonEnabled(true);
+        //this.getActionBar().setDisplayHomeAsUpEnabled(true);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         String jsonData = getIntent().getStringExtra("placeinfo");
-
 
         //JSONObject js=null;
         try {
@@ -51,8 +53,11 @@ public class PlacesInfo extends AppCompatActivity {
         }
 
         JSONObject placedetails = null;
+
+        String placename="";
         try {
             placedetails = js.getJSONObject("result");
+            placename= placedetails.getString("name");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -70,15 +75,21 @@ public class PlacesInfo extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(placename);
+        ActionBar ab = getSupportActionBar();
+        ab.setHomeButtonEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.place_tabs);
+
+
         //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
 
 
-
+        //onCreateOptionsMenu(this);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_info_outline);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_photos);
@@ -132,6 +143,12 @@ public class PlacesInfo extends AppCompatActivity {
         if (id == R.id.action_settings) {
 
             Log.d(TAG, "onOptionsItemSelected: ");
+            return true;
+        }
+
+        else if(id==R.id.twitter)
+        {
+            Log.d(TAG, "Selected twiiter item: ");
             return true;
         }
 
