@@ -435,6 +435,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             if(isgoogle)
             {
                 customsort_ratings(asc);
+                customsort_yelp_ratings(asc);
                 adapter = new ReviewAdapter(getContext(), google_reviews, true );
                 //adapter.setClickListener(this);
 
@@ -445,6 +446,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             else
             {
                 customsort_yelp_ratings(asc);
+                customsort_ratings(asc);
                 adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
 
                 recyclerView.setAdapter(adapter);
@@ -465,6 +467,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             if(isgoogle)
             {
                 customsort_timings(asc);
+                customsort_yelp_timings(asc);
                 adapter = new ReviewAdapter(getContext(), google_reviews, true );
                 //adapter.setClickListener(this);
 
@@ -475,6 +478,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             else
             {
                 customsort_yelp_timings(asc);
+                customsort_timings(asc);
                 adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
 
                 recyclerView.setAdapter(adapter);
