@@ -58,6 +58,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
     private double src_lat =0.0;
     private double src_lng=0.0;
 
+    String destination_place="";
     GoogleMap mainMap;
     View view;
     @Nullable
@@ -66,7 +67,12 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.map_fragment, container, false);
         JSONObject json= ((PlacesInfo)this.getActivity()).js;
-
+        try {
+            Log.d(TAG, "Map data: "+json.getJSONObject("result").get("name"));
+            destination_place = json.getJSONObject("result").getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         double ne_lat=0,ne_lng=0,sw_lat=0,sw_lng=0;
 
@@ -153,7 +159,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         Log.d(TAG, "Original location:  "+source);
         if(source.equals(""))
             return;
-        String destination= String.valueOf(lat)+","+String.valueOf(lng);
+        final String destination= String.valueOf(lat)+","+String.valueOf(lng);
         Log.d(TAG, "Mode of travel: "+mode);
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+ URLEncoder.encode(source)+"&destination="+destination+"&mode="+mode+"&key=AIzaSyAYKYTAwBVMKXjmcfhD-EGLkhbL-9Yxayg";
 
@@ -178,8 +184,9 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
                     src_lat= jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getDouble("lat");
                     src_lng= jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getDouble("lng");
 
+                    String temp_dst = destination;
                     mainMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng))
-                            .title("Marker in Sydney")).showInfoWindow();
+                            .title(destination_place)).showInfoWindow();
 
                     mainMap.addMarker(new MarkerOptions().position(new LatLng(src_lat,src_lng))
                             .title("Marker in Sydney"));
@@ -192,7 +199,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
 
 
                 } catch (JSONException e) {
-
+                    Toast.makeText(getContext(),"No routes found:", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -262,7 +269,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         mainMap = googleMap;
 
         googleMap.addMarker(new MarkerOptions().position(dest)
-                .title("Marker in Sydney"));
+                .title(destination_place)).showInfoWindow();
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(dest));
         googleMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
