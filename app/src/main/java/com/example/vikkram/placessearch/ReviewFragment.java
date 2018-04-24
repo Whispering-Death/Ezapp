@@ -56,7 +56,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         getDefaultReviews(true);
         default_google_reviews.addAll(google_reviews);
         getYelpReviews();
-        default_yelp_reviews.addAll(yelp_reviews);
+
 
 
         /*
@@ -217,6 +217,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
                         yelp_reviews.add(yelpJSON.getJSONObject(i));
 
                     }
+                    default_yelp_reviews.addAll(yelp_reviews);
 
 
                     //Log.d(TAG, "Final Yelp Reviews: "+yelp_reviews);
