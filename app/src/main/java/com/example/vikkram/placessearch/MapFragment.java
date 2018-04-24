@@ -54,6 +54,10 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
     private double lat = 0.0;
     private double lng=0.0;
 
+
+    private double src_lat =0.0;
+    private double src_lng=0.0;
+
     GoogleMap mainMap;
     View view;
     @Nullable
@@ -62,6 +66,26 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.map_fragment, container, false);
         JSONObject json= ((PlacesInfo)this.getActivity()).js;
+
+
+        double ne_lat,ne_lng,sw_lat,sw_lng;
+
+
+        try {
+            //Log.d(TAG, "Bias ports: "+json.getJSONObject("result").getJSONObject("geometry").getJSONObject("location").get("lat"));
+
+            ne_lat= json.getJSONObject("result").getJSONObject("geometry").getJSONObject("viewport").getJSONObject("northeast").getDouble("lat");
+            Log.d(TAG, "North east latitude: "+ne_lat);
+            ne_lng = json.getJSONObject("result").getJSONObject("geometry").getJSONObject("viewport").getJSONObject("northeast").getDouble("lng");
+
+            sw_lat = json.getJSONObject("result").getJSONObject("geometry").getJSONObject("viewport").getJSONObject("southwest").getDouble("lat");
+
+            sw_lng= json.getJSONObject("result").getJSONObject("geometry").getJSONObject("viewport").getJSONObject("southwest").getDouble("lng");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             try {
                 mGoogleApiClient = new GoogleApiClient
@@ -92,7 +116,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         final AutoCompleteTextView atv = (AutoCompleteTextView)view.findViewById(R.id.map_atv_destination);
         atv.setAdapter(mPlaceAutocompleteAdapter);
 
-        Spinner spn = (Spinner)view.findViewById(R.id.spinnerCategory);
+        final Spinner spn = (Spinner)view.findViewById(R.id.spinnerCategory);
 
         spn.setOnItemSelectedListener(this);
         atv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,8 +125,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
                 Log.d(TAG, "Item clicked: "+atv.getText().toString());
                 Log.d(TAG, "Calling directions api");
 
-
-                getDirections("driving");
+                String travel_mode = spn.getSelectedItem().toString();
+                getDirections(travel_mode.toLowerCase());
                 //String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4";
 
 
@@ -120,7 +144,12 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
         Log.d(TAG, "Making google directions api request");
 
         AutoCompleteTextView dst = (AutoCompleteTextView)view.findViewById(R.id.map_atv_destination);
-        String source = dst.getText().toString();
+
+
+        String source = dst.getText().toString().trim();
+        Log.d(TAG, "Original location:  "+source);
+        if(source.equals(""))
+            return;
         String destination= String.valueOf(lat)+","+String.valueOf(lng);
         Log.d(TAG, "Mode of travel: "+mode);
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+ URLEncoder.encode(source)+"&destination="+destination+"&mode="+mode+"&key=AIzaSyAYKYTAwBVMKXjmcfhD-EGLkhbL-9Yxayg";
@@ -140,6 +169,17 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
                     Log.d(TAG, "onResponse: "+jsonArray);
+
+                   // Log.d(TAG, "Source location: "+jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getString("lat"));
+                   // Log.d(TAG, "Source location: "+jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getString("lng"));
+                    src_lat= jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getDouble("lat");
+                    src_lng= jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getDouble("lng");
+
+                    mainMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng))
+                            .title("Marker in Sydney")).showInfoWindow();
+
+                    mainMap.addMarker(new MarkerOptions().position(new LatLng(src_lat,src_lng))
+                            .title("Marker in Sydney"));
 
                     String[] points;
                     points= getPaths(jsonArray);
