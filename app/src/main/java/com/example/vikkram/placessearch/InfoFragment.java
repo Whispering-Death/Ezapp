@@ -101,6 +101,7 @@ public class InfoFragment extends Fragment{
                 rating.setRating(Float.parseFloat(jsonData.getString("rating")));
             } catch (JSONException e) {
                 //e.printStackTrace();
+                rating.setVisibility(View.INVISIBLE);
             }
 
             try {

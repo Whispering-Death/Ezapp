@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new Tab1Fragment(), "Search");
         adapter.addFragment(new Tab2Fragment(), "Favorites");
-        adapter.addFragment(new Tab3Fragment(), "TAB3");
+        //adapter.addFragment(new Tab3Fragment(), "TAB3");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(1);
     }
