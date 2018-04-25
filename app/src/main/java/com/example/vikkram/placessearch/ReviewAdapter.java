@@ -33,12 +33,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     private static final String TAG = "ReviewAdapter";
     private boolean isgoogle =true;
     private Context context;
+    ReviewFragment fragment;
     View view;
 
-    ReviewAdapter(Context context, List<JSONObject> data, boolean reviewType) {
+    ReviewAdapter(Context context, List<JSONObject> data, boolean reviewType, ReviewFragment fragment) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.context = context;
+        this.fragment=fragment;
         Log.d(TAG, "ReviewAdapter: "+this.mData);
         this.isgoogle= reviewType;
 
@@ -67,6 +69,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ReviewAdapter.ViewHolder holder, final int position) {
+
+        if(mData.isEmpty())
+            this.fragment.checkEmpty();
         final JSONObject js = mData.get(position);
         Log.d(TAG, "onBindViewHolder: ");
         String name= "";

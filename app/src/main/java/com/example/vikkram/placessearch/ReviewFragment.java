@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -79,7 +80,11 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             }
         }
         */
-        
+
+        TextView noreviews = (TextView) view.findViewById(R.id.noreviews);
+
+        if(google_reviews.size()> 0)
+            noreviews.setVisibility(View.GONE);
         Spinner reviewType = view.findViewById(R.id.reviewCategory);
         Log.d(TAG, "onCreateView: "+google_reviews);
         Spinner sortType = view.findViewById(R.id.sortingCategory);
@@ -91,7 +96,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         recyclerView = view.findViewById(R.id.revcontainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ReviewAdapter(getContext(), google_reviews, true );
+        adapter = new ReviewAdapter(getContext(), google_reviews, true,this );
         adapter.setClickListener(this);
 
         //recyclerView.invalidate();
@@ -411,7 +416,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
             if(isgoogle)
             {
-                adapter = new ReviewAdapter(getContext(), default_google_reviews, true );
+                adapter = new ReviewAdapter(getContext(), default_google_reviews, true ,this);
 
                 recyclerView.setAdapter(adapter);
 
@@ -419,7 +424,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             else
             {
                 Log.d(TAG, String.valueOf(default_yelp_reviews));
-                adapter = new ReviewAdapter(getContext(), default_yelp_reviews, false);
+                adapter = new ReviewAdapter(getContext(), default_yelp_reviews, false,this);
 
                 recyclerView.setAdapter(adapter);
             }
@@ -439,7 +444,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             {
                 customsort_ratings(asc);
                 customsort_yelp_ratings(asc);
-                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+                adapter = new ReviewAdapter(getContext(), google_reviews, true, this );
                 //adapter.setClickListener(this);
 
                 //recyclerView.invalidate();
@@ -450,7 +455,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             {
                 customsort_yelp_ratings(asc);
                 customsort_ratings(asc);
-                adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false, this);
 
                 recyclerView.setAdapter(adapter);
 
@@ -471,7 +476,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             {
                 customsort_timings(asc);
                 customsort_yelp_timings(asc);
-                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+                adapter = new ReviewAdapter(getContext(), google_reviews, true, this );
                 //adapter.setClickListener(this);
 
                 //recyclerView.invalidate();
@@ -482,7 +487,7 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             {
                 customsort_yelp_timings(asc);
                 customsort_timings(asc);
-                adapter = new ReviewAdapter(getContext(), yelp_reviews, false);
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false, this );
 
                 recyclerView.setAdapter(adapter);
 
@@ -495,10 +500,11 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view1, int position, long id) {
 
         //Log.d(TAG, "onItemSelected: "+parent.getItemAtPosition(position).getClass());
         //Log.d(TAG, "onItemSelecte: ");
+        TextView noreviews = (TextView) view.findViewById(R.id.noreviews);
 
         String item= parent.getItemAtPosition(position).toString();
         Log.d(TAG, "onItemSelected: "+item);
@@ -509,14 +515,25 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             Log.d(TAG, "Either google or yelp was selected");
             if(sel_pos==1)
             {
-                adapter = new ReviewAdapter(getContext(), yelp_reviews, false );
+
+
+                if(yelp_reviews.size()> 0)
+                    noreviews.setVisibility(View.GONE);
+                else
+                    noreviews.setVisibility(View.VISIBLE);
+                adapter = new ReviewAdapter(getContext(), yelp_reviews, false , this);
 
                 recyclerView.setAdapter(adapter);
             }
 
             else
+
             {
-                adapter = new ReviewAdapter(getContext(), google_reviews, true );
+                if(google_reviews.size()> 0)
+                    noreviews.setVisibility(View.GONE);
+                else
+                    noreviews.setVisibility(View.VISIBLE);
+                adapter = new ReviewAdapter(getContext(), google_reviews, true , this);
 
                 recyclerView.setAdapter(adapter);
             }
@@ -535,6 +552,12 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         //Log.d(TAG, "onItemSelected: "+parent.getItemAtPosition(position).toString());
     }
 
+
+    public void checkEmpty()
+    {
+        TextView norev = (TextView) view.findViewById(R.id.noreviews);
+        norev.setVisibility(view.VISIBLE);
+    }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
