@@ -1,6 +1,7 @@
 package com.example.vikkram.placessearch;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.IDNA;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Map;
 
 public class PlacesInfo extends AppCompatActivity {
 
@@ -38,7 +40,7 @@ public class PlacesInfo extends AppCompatActivity {
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
     private static final String TAG = "PlacesInfo";
-
+    String placename="";
     JSONObject js = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class PlacesInfo extends AppCompatActivity {
 
         JSONObject placedetails = null;
 
-        String placename="";
+
         try {
             placedetails = js.getJSONObject("result");
             placename= placedetails.getString("name");
@@ -140,7 +142,35 @@ public class PlacesInfo extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_places_info, menu);
+        SharedPreferences myPrefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        Map<String, ?> entries = myPrefs.getAll();
+        Log.d(TAG, "onCreateOptionsMenu: ");
+        if(entries.containsKey(placename))
+        {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placefav);
+        }
+
+        else
+        {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placenofav);
+        }
+
+        //menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placefav)
+
+        //invalidateOptionsMenu();
+
+        
+
         return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //menu.findItem(R.id.penc).setVisible(false);
+        //MenuItem fav1 = menu.getItem(R.id.action_favorite);
+        Log.d(TAG, "onPrepareOptionsMenu: ");
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -161,12 +191,12 @@ public class PlacesInfo extends AppCompatActivity {
         {
             Log.d(TAG, "Selected twiiter item: ");
             String url = null;
-            String placename = "";
+
             String address = "";
             String tweetText= "Check out ";
             try {
                 url = js.getJSONObject("result").getString("website");
-                placename= js.getJSONObject("result").getString("name");
+                //placename= js.getJSONObject("result").getString("name");
                 address = js.getJSONObject("result").getString("formatted_address");
 
             } catch (JSONException e) {
@@ -183,6 +213,12 @@ public class PlacesInfo extends AppCompatActivity {
             startActivity(i);
             //Intent intent = new Intent(getParent(), Uri.parse("https://twitter.com/intent/tweet?text=" + tweetText + "&url=" + url + "&hashtags=" + hashTags));
             //startActivity(intent);
+            return true;
+        }
+
+        else if(id== R.id.action_favorite)
+        {
+
             return true;
         }
 

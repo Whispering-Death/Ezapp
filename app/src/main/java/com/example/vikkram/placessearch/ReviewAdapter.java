@@ -1,7 +1,9 @@
 package com.example.vikkram.placessearch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +32,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     private ReviewAdapter.ItemClickListener mClickListener;
     private static final String TAG = "ReviewAdapter";
     private boolean isgoogle =true;
+    private Context context;
     View view;
 
     ReviewAdapter(Context context, List<JSONObject> data, boolean reviewType) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.context = context;
         Log.d(TAG, "ReviewAdapter: "+this.mData);
         this.isgoogle= reviewType;
 
@@ -72,6 +76,44 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         String rating="";
         String text = "";
 
+        holder.itemView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String web_url="";
+                        if(isgoogle)
+                        {
+                            try {
+                                web_url = js.getString("author_url");
+                            } catch (JSONException e) {
+                                //e.printStackTrace();
+                            }
+
+                            Intent i = new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse(web_url));
+                            context.startActivity(i);
+                            //Log.d(TAG, "Google review clicked mate ");
+
+                        }
+
+                        else
+                        {
+
+                            try {
+                                web_url = js.getString("url");
+                            } catch (JSONException e) {
+                                //e.printStackTrace();
+                            }
+
+                            Intent i = new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse(web_url));
+                            context.startActivity(i);
+                            //Log.d(TAG, "Yelp review clicked mate ");
+                        }
+
+                    }
+                }
+        );
         if(this.isgoogle)
             set(js,"author_name",holder.name);
 

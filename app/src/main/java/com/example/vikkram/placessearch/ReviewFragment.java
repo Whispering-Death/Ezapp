@@ -85,6 +85,8 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
         Spinner sortType = view.findViewById(R.id.sortingCategory);
         Log.d(TAG, "Google reviews: "+google_reviews);
         reviewType.setOnItemSelectedListener(this);
+
+
         sortType.setOnItemSelectedListener(this);
         recyclerView = view.findViewById(R.id.revcontainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -540,6 +542,8 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d(TAG, "Review method clicked: ");
+
     }
+
+
 }
