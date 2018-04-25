@@ -1,9 +1,12 @@
 package com.example.vikkram.placessearch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -25,12 +34,14 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     private List<JSONObject> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-
+    private  Context context;
+    private static final String TAG = "FavAdapter";
     private Tab2Fragment fragment;
     View view;
     SharedPreferences myprefs;
     // data is passed into the constructor
     FavAdapter(Context context, List<JSONObject> data, Tab2Fragment fragment) {
+        this.context = context;
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.fragment = fragment;
@@ -56,6 +67,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
         //String animal = mData.get(position);
         String place_name = null;
         String place_icon = null;
+        String placeid = "";
 
         try {
             place_name = js.get("name").toString();
@@ -70,6 +82,64 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
         Picasso.get().load(place_icon).into(holder.myIcon);
         holder.myDel.setImageResource(R.drawable.ic_resfav);
 
+        holder.itemView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String placeid="";
+                        try {
+                            placeid= js.getString("place_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d(TAG, "Place id found: "+placeid);
+
+
+                        final ProgressDialog progressDialog = new ProgressDialog(context);
+                        progressDialog.setMessage("Fetching place details");
+                        progressDialog.show();
+                        //String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4";
+                        String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid="+placeid;
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                                url, new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+
+                                progressDialog.dismiss();
+
+                                try {
+                                    //Log.d(TAG, "Submitted results"+response);
+                                    JSONObject jsonObject = new JSONObject(response);
+
+                                    Intent intent = new Intent(context, PlacesInfo.class);
+                                    intent.putExtra("placeinfo", jsonObject.toString());
+                                    context.startActivity(intent);
+
+
+
+
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
+                                //Toast.makeText(this, "Error" + error.toString(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                        RequestQueue requestQueue = Volley.newRequestQueue(context);
+                        requestQueue.add(stringRequest);
+                    }
+                }
+        );
         holder.myDel.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
