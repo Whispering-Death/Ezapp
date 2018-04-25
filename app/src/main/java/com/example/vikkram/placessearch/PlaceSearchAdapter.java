@@ -49,11 +49,13 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final JSONObject js = mData.get(position);
 
-        String animal = null;
+        String place_name = null;
         String placeIcon = null;
+        String vicinity = null;
         //final String placeid= null;
         try {
-            animal = js.get("name").toString()+"\n"+js.get("vicinity");
+            place_name = js.get("name").toString();
+            vicinity = js.getString("vicinity");
             placeIcon= js.get("icon").toString();
             String placeid= js.get("place_id").toString();
             if(myprefs.contains(placeid))
@@ -69,7 +71,8 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
         }
 
 
-        holder.myTextView.setText(animal);
+        holder.myTextView.setText(place_name);
+        holder.myAdr.setText(vicinity);
         Picasso.get().load(placeIcon).into(holder.myPlaceIcon);
 
 
@@ -137,11 +140,15 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
 
         ImageView myPlaceIcon;
         ImageView myPlaceFav;
+        TextView myAdr;
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.place_name);
             myPlaceIcon = itemView.findViewById(R.id.place_icon);
             myPlaceFav = itemView.findViewById(R.id.place_nofav);
+            myAdr = itemView.findViewById(R.id.place_vic);
+
+
 
             itemView.setOnClickListener(this);
 
