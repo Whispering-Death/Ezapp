@@ -24,12 +24,14 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
@@ -185,12 +187,28 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
                     src_lng= jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location").getDouble("lng");
 
                     String temp_dst = destination;
+
+
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    //builder.include(position(new LatLng(lat,lng)));
+                    MarkerOptions m1 = new MarkerOptions().position(new LatLng(lat,lng));
+                    MarkerOptions m2 = new MarkerOptions().position(new LatLng(src_lat, src_lng));
+                    builder.include(m1.getPosition());
+                    builder.include(m2.getPosition());
+
                     mainMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng))
                             .title(destination_place)).showInfoWindow();
 
                     mainMap.addMarker(new MarkerOptions().position(new LatLng(src_lat,src_lng))
                             .title("Marker in Sydney"));
+                    int width = getResources().getDisplayMetrics().widthPixels;
+                    int height = getResources().getDisplayMetrics().heightPixels;
+                    int padding = (int) (width * 0.15);
+                    LatLngBounds updated_bounds = builder.build();
 
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(updated_bounds, width, height, padding);
+
+                    mainMap.animateCamera(cu);
                     String[] points;
                     points= getPaths(jsonArray);
                     displayDirection(points);
