@@ -126,10 +126,16 @@ public class PlacesInfo extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_places_info, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
