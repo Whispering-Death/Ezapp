@@ -67,11 +67,14 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
         //String animal = mData.get(position);
         String place_name = null;
         String place_icon = null;
+        String place_vic = "";
         String placeid = "";
 
         try {
             place_name = js.get("name").toString();
+
             place_icon = js.get("icon").toString();
+            place_vic = js.getString("vicinity");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -81,7 +84,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
 
         Picasso.get().load(place_icon).into(holder.myIcon);
         holder.myDel.setImageResource(R.drawable.ic_resfav);
-
+        holder.myAdr.setText(place_vic);
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -182,11 +185,14 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
         TextView myName;
         ImageView myIcon;
         ImageView myDel;
+
+        TextView myAdr;
         ViewHolder(View itemView) {
             super(itemView);
             myName = itemView.findViewById(R.id.fav_name);
             myIcon = itemView.findViewById(R.id.fav_icon);
             myDel = itemView.findViewById(R.id.fav_del);
+            myAdr = itemView.findViewById(R.id.fav_vic);
 
 
             itemView.setOnClickListener(this);
