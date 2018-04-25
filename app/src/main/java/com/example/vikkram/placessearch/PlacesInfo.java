@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,9 +40,12 @@ public class PlacesInfo extends AppCompatActivity {
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
+    SharedPreferences myprefs;
     private static final String TAG = "PlacesInfo";
     String placename="";
     JSONObject js = null;
+
+    boolean isfav= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +53,7 @@ public class PlacesInfo extends AppCompatActivity {
         //this.getActionBar().setHomeButtonEnabled(true);
         //this.getActionBar().setDisplayHomeAsUpEnabled(true);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        myprefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String jsonData = getIntent().getStringExtra("placeinfo");
 
         //JSONObject js=null;
@@ -142,17 +146,30 @@ public class PlacesInfo extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_places_info, menu);
-        SharedPreferences myPrefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        Map<String, ?> entries = myPrefs.getAll();
-        Log.d(TAG, "onCreateOptionsMenu: ");
-        if(entries.containsKey(placename))
+
+        String placeid="";
+
+        try {
+            placeid = js.getJSONObject("result").getString("place_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Log.d(TAG, "onCreateOptionsMenu: ");
+        //Log.d(TAG, "place: "+placeid );
+        if(myprefs.contains(placeid))
         {
+            Log.d(TAG, "onCreateOptionsMenu: Favorited");
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placefav);
+            isfav = true;
+
         }
 
         else
         {
+            Log.d(TAG, "onCreateOptionsMenu: Not favorited");
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placenofav);
+            isfav=false;
         }
 
         //menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_placefav)
@@ -218,12 +235,52 @@ public class PlacesInfo extends AppCompatActivity {
 
         else if(id== R.id.action_favorite)
         {
+            SharedPreferences.Editor editor = myprefs.edit();
+            String placeid="";
 
+            try {
+                placeid = js.getJSONObject("result").getString("place_id");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(isfav== false)
+            {
+                isfav = true;
+                toastMessage(placename+ " added to favorites");
+                try {
+                    editor.putString(placeid,js.getJSONObject("result").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                editor.commit();
+                item.setIcon(R.drawable.ic_placefav);
+
+            }
+
+            else
+            {
+                isfav=false;
+                toastMessage(placename+" removed from favorites");
+                editor.remove(placeid);
+                editor.commit();
+                item.setIcon(R.drawable.ic_placenofav);
+
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    private void toastMessage(String message)
+    {
 
+        Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        //View v1 = t.getView();
+        //v1.setBackgroundColor(Integer.parseInt("#cccccc"));
+        t.show();
+
+        //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
 
 }
