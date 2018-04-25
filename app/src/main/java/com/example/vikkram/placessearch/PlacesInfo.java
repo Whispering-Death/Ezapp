@@ -1,6 +1,8 @@
 package com.example.vikkram.placessearch;
 
+import android.content.Intent;
 import android.icu.text.IDNA;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,9 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URI;
+import java.net.URLEncoder;
 
 public class PlacesInfo extends AppCompatActivity {
 
@@ -155,6 +160,29 @@ public class PlacesInfo extends AppCompatActivity {
         else if(id==R.id.twitter)
         {
             Log.d(TAG, "Selected twiiter item: ");
+            String url = null;
+            String placename = "";
+            String address = "";
+            String tweetText= "Check out ";
+            try {
+                url = js.getJSONObject("result").getString("website");
+                placename= js.getJSONObject("result").getString("name");
+                address = js.getJSONObject("result").getString("formatted_address");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            tweetText+="Check out "+ URLEncoder.encode(placename)+" located at "+URLEncoder.encode(address)+" Website: ";
+            String hashTags = "TravelAndEntertainmentSearch";
+            //Log.d(TAG, "URL selected: "+url);
+
+
+            Intent i = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://twitter.com/intent/tweet?text=" + tweetText + "&url=" + url + "&hashtags=" + hashTags));
+            startActivity(i);
+            //Intent intent = new Intent(getParent(), Uri.parse("https://twitter.com/intent/tweet?text=" + tweetText + "&url=" + url + "&hashtags=" + hashTags));
+            //startActivity(intent);
             return true;
         }
 
