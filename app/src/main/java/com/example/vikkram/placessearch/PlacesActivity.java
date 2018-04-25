@@ -5,6 +5,7 @@ package com.example.vikkram.placessearch;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +53,9 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
         jsonList = new ArrayList<>();
         String jsonData = getIntent().getStringExtra("places");
 
-
+        ActionBar ab = getSupportActionBar();
+        ab.setHomeButtonEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);
 
         if(getIntent().getStringExtra("token")!= null)
         {
@@ -354,5 +357,9 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
         requestQueue.add(stringRequest);
 
     }
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 }
