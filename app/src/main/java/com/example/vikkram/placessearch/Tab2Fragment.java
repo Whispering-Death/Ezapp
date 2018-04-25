@@ -122,13 +122,20 @@ import static android.content.Context.MODE_PRIVATE;
             }
             RecyclerView recyclerView = getView().findViewById(R.id.favcontainer);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapter = new FavAdapter(getContext(), favorites);
+            adapter = new FavAdapter(getContext(), favorites,this);
             //adapter.setClickListener(this);
 
             //recyclerView.invalidate();
             recyclerView.setAdapter(adapter);
         }
 
+        public  void check()
+        {
+            TextView nofav = getView().findViewById(R.id.nofavorites);
+            nofav.setVisibility(View.VISIBLE);
+
+            Log.d(TAG, "printdummy: Function called from adapter ");
+        }
         @Override
         public void onStart() {
             SharedPreferences myPrefs = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -164,7 +171,7 @@ import static android.content.Context.MODE_PRIVATE;
             }
             RecyclerView recyclerView = getView().findViewById(R.id.favcontainer);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapter = new FavAdapter(getContext(), favorites);
+            adapter = new FavAdapter(getContext(), favorites,this);
             //adapter.setClickListener(this);
 
             //recyclerView.invalidate();

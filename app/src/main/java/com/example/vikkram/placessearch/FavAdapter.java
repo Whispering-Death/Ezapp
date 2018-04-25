@@ -25,12 +25,16 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     private List<JSONObject> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+
+    private Tab2Fragment fragment;
     View view;
     SharedPreferences myprefs;
     // data is passed into the constructor
-    FavAdapter(Context context, List<JSONObject> data) {
+    FavAdapter(Context context, List<JSONObject> data, Tab2Fragment fragment) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.fragment = fragment;
+
     }
 
     // inflates the row layout from xml when needed
@@ -38,6 +42,8 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = mInflater.inflate(R.layout.recycler_favorites, parent, false);
         myprefs = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        //this.fragment.printdummy();
         //setHasStableIds(true);
         return new ViewHolder(view);
     }
@@ -75,6 +81,9 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder>{
                             SharedPreferences.Editor editor = myprefs.edit();
                             editor.remove(placeid);
                             mData.remove(position);
+
+                            if(mData.isEmpty())
+                                fragment.check();
                             toastMessage(name+" removed from favorites");
                             editor.commit();
                             notifyDataSetChanged();
