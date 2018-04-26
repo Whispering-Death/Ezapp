@@ -56,6 +56,7 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
         jsonList = new ArrayList<>();
         String jsonData = getIntent().getStringExtra("places");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setTitle("Search Results");
         //setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setHomeButtonEnabled(true);
