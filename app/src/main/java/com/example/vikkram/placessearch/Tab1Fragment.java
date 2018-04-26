@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -87,6 +88,17 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         view = inflater.inflate(R.layout.tab1_fragment, container, false);
         //btnTEST = (Button) view.findViewById(R.id.btnTEST);
         locationManager = (LocationManager) getActivity().getSystemService(getContext().LOCATION_SERVICE);
+
+        boolean enabled = locationManager
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+// check if enabled and if not send user to the GSP settings
+// Better solution would be to display a dialog and suggesting to
+// go to the settings
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
 
@@ -258,7 +270,8 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
+        if(locationManager!=null)
+            locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     private void getJSONData() {

@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdapter.ItemClickListener {
-    PlaceSearchAdapter adapter;
+    public static PlaceSearchAdapter adapter;
     private static final String TAG = "PlacesActivity";
     ArrayList<JSONObject> jsonList;
 
@@ -234,18 +234,24 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
     {
 
         String url = "http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/nextPageSearch?pagetoken="+token;
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Fetching next page details");
+        progressDialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 ArrayList<JSONObject> tempList = new ArrayList<>();
+
                 try {
+
+
                     Log.d(TAG, "Next page results:"+response);
                     JSONObject jsonObject = new JSONObject(response);
                     //Toast.makeText(getContext(), "No Error", Toast.LENGTH_SHORT).show();
-
+                    progressDialog.dismiss();
                     JSONArray array = jsonObject.getJSONArray("results");
                     String pagetoken = "";
 
@@ -278,15 +284,15 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
                     cur_page+=1;
                     parseData();
                 } catch (JSONException e) {
-
+                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                //Toast.makeText(this, "Error" + error.toString(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Error" + error.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });

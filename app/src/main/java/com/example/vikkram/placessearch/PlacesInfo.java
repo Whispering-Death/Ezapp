@@ -267,6 +267,8 @@ public class PlacesInfo extends AppCompatActivity {
                 item.setIcon(R.drawable.ic_placenofav);
 
             }
+
+            PlacesActivity.adapter.notifyDataSetChanged();
             return true;
         }
 
