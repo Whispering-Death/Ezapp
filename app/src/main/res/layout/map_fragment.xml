@@ -7,6 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="From"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
         android:id="@+id/fromTitle"
         />
     <AutoCompleteTextView
@@ -14,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
+        android:layout_marginLeft="8dp"
         android:hint="Type in the Location"
 
 
@@ -24,6 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Travel mode"
+        android:layout_marginLeft="8dp"
         android:id="@+id/travelTitle"
         />
 
@@ -32,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/travel"
+        android:layout_marginLeft="8dp"
         android:entries="@array/travel_modes">
 
     </Spinner>
@@ -42,6 +47,8 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.vikkram.placessearch"
-        />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        tools:context="com.example.vikkram.placessearch" />
 </LinearLayout>
