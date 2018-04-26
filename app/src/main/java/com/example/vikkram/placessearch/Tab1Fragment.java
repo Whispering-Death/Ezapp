@@ -295,7 +295,7 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         }
 
         RadioButton second = (RadioButton) view.findViewById(R.id.second);
-        String category = sp_category.getSelectedItem().toString().trim();
+        String category = sp_category.getSelectedItem().toString().toLowerCase();
         category = category.replaceAll(" ","_");
         Log.d(TAG, keyword);
         Log.d(TAG, destination.getText().toString());
@@ -308,12 +308,14 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         if(second.isChecked())
         {
             Log.d(TAG, "getJSONData: "+destination.getText().toString());
-            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+keyword+"&category="+category+"&distance="+distance+"&place="+ URLEncoder.encode(destination.getText().toString());
+            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+URLEncoder.encode(keyword)+"&category="+category+"&distance="+distance+"&place="+ URLEncoder.encode(destination.getText().toString());
+            Log.d(TAG,url);
 
         }
         else
         {
-            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+keyword+"&category="+category+"&distance="+distance+"&lat="+lat+"&lon="+lon;
+            url="http://vasuki-travel-env.hhtzymbd2i.us-west-2.elasticbeanstalk.com/geocoding?keyword="+URLEncoder.encode(keyword)+"&category="+category+"&distance="+distance+"&lat="+lat+"&lon="+lon;
+            Log.d(TAG, url);
 
         }
 

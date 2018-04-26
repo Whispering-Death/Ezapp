@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/place_icon"
         android:layout_width="71dp"
-        android:layout_height="80dp"
+        android:layout_height="49dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -26,7 +26,7 @@
     <ImageView
         android:id="@+id/place_nofav"
         android:layout_width="89dp"
-        android:layout_height="71dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
