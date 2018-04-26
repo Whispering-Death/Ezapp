@@ -200,7 +200,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
             if(yelp_photo!="")
             {
-                Picasso.get().load(yelp_photo).resize(200,100).into(holder.photo);
+                Picasso.get().load(yelp_photo).resize(200,200).into(holder.photo);
             }
         }
         // holder.name.setText("afridi");
