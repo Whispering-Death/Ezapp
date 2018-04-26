@@ -9,7 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Keyword"
-        android:padding="15px"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        />
 
     <TextView
         android:id="@+id/ifNullKeyword"
@@ -24,8 +26,8 @@
         android:id="@+id/et_keyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
+        android:layout_marginLeft="8dp"
+
         android:layout_below="@id/ifNullKeyword" />
 
     <TextView
@@ -33,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_keyword"
+        android:layout_marginLeft="8dp"
         android:text="Category"/>
 
     <Spinner
@@ -40,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/categoryTitle"
+        android:layout_marginLeft="8dp"
         android:entries="@array/categories_array">
 
     </Spinner>
@@ -49,12 +53,15 @@
         android:layout_below="@id/spinnerCategory"
         android:layout_height="wrap_content"
         android:id="@+id/distanceTitle"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="Distance (in miles)"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/distanceTitle"
         android:id="@+id/et_distance"
+        android:layout_marginLeft="8dp"
         android:hint="Enter distance (default 10 miles)"
         android:inputType="number"
         />
@@ -64,12 +71,14 @@
         android:layout_height="wrap_content"
         android:text="From"
         android:id="@+id/fromTitle"
+        android:layout_marginLeft="8dp"
         android:layout_below="@id/et_distance"/>
 
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fromTitle"
+        android:layout_marginLeft="8dp"
         android:id="@+id/location">
         <RadioButton
             android:layout_width="wrap_content"
@@ -93,8 +102,9 @@
             android:id="@+id/atv_destination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="0dp"
             android:hint="Type int the Location"
+            android:layout_marginLeft="16dp"
             android:enabled="false"
 
             >
