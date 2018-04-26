@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +23,27 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.ViewHolder> {
 
+
+    private static  final String TAG = "PlaceSearchAdapter";
     private List<JSONObject> mData;
     private List<String> placeIcon;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    Context context;
     SharedPreferences myprefs;
     View view;
     // data is passed into the constructor
     PlaceSearchAdapter(Context context, List<JSONObject> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        
+        if(data.isEmpty())
+        {
+            Log.d(TAG, "PlaceSearchAdapter: empty");
+            ((PlacesActivity)context).checkEmpty();
+        }
+
+        this.context=context;
         setHasStableIds(true);
     }
 
@@ -48,6 +60,12 @@ public class PlaceSearchAdapter extends RecyclerView.Adapter<PlaceSearchAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final JSONObject js = mData.get(position);
+
+        if(mData.isEmpty())
+        {
+            Log.d(TAG, "onBindViewHolder: ");
+            ((PlacesActivity)context).checkEmpty();
+        }
 
         String place_name = null;
         String placeIcon = null;
