@@ -83,14 +83,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="3">
+
         <TextView
 
-            android:text="Rating"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="12dp"
             android:layout_height="wrap_content"
-            android:padding="3dip" />
+            android:layout_weight="1"
+            android:padding="3dip"
+            android:text="Rating"
+            android:textStyle="bold" />
+
         <RatingBar
             android:id="@+id/ratingBar"
             style="@style/Widget.AppCompat.RatingBar.Small"
@@ -100,8 +102,7 @@
             android:layout_marginStart="28dp"
             android:layout_marginTop="8dp"
             android:isIndicator="true"
-            android:rating="3"
-             />
+            android:rating="3" />
     </TableRow>
     <TableRow
         android:layout_width="match_parent"
