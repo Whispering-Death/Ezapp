@@ -55,6 +55,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.net.URLEncoder;
 import java.util.concurrent.Executor;
@@ -204,6 +205,12 @@ public class Tab1Fragment extends Fragment implements GoogleApiClient.OnConnecti
         RadioButton btn1= (RadioButton) view.findViewById(R.id.first);
         Spinner mSpinner = (Spinner) view.findViewById(R.id.spinnerCategory);
         String compareValue = "Default";
+
+        TextView er_keyword = view.findViewById(R.id.ifNullKeyword);
+        er_keyword.setVisibility(View.GONE);
+        TextView er_location = view.findViewById(R.id.ifNullDestination);
+        er_location.setVisibility(View.GONE);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.categories_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);

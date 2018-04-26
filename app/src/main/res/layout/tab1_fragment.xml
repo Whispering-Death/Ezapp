@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleHeading"
         android:visibility="gone"
+        android:layout_marginLeft="16dp"
         android:text="Please enter mandatory field"
         android:textColor="#ff0000"/>
 
@@ -118,6 +119,7 @@
             android:visibility="gone"
             android:id="@+id/ifNullDestination"
             android:text="Please enter mandatory field"
+            android:layout_marginLeft="24dp"
             android:textColor="#ff0000"
             />
 
