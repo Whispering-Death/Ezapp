@@ -268,7 +268,15 @@ public class PlacesInfo extends AppCompatActivity {
 
             }
 
-            PlacesActivity.adapter.notifyDataSetChanged();
+            try{
+                PlacesActivity.adapter.notifyDataSetChanged();
+            }
+
+            catch(Exception e)
+            {
+                ;
+            }
+
             return true;
         }
 

@@ -71,7 +71,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public void onBindViewHolder(ReviewAdapter.ViewHolder holder, final int position) {
 
         if(mData.isEmpty())
-            this.fragment.checkEmpty();
+            this.fragment.checkEmpty(this.isgoogle);
         final JSONObject js = mData.get(position);
         Log.d(TAG, "onBindViewHolder: ");
         String name= "";

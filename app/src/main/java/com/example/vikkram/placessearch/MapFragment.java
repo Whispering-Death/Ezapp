@@ -203,7 +203,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnMa
                             .title("Marker in Sydney"));
                     int width = getResources().getDisplayMetrics().widthPixels;
                     int height = getResources().getDisplayMetrics().heightPixels;
-                    int padding = (int) (width * 0.15);
+                    int padding = (int) (height * 0.15);
                     LatLngBounds updated_bounds = builder.build();
 
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(updated_bounds, width, height, padding);

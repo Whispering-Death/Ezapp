@@ -520,7 +520,11 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
                 if(yelp_reviews.size()> 0)
                     noreviews.setVisibility(View.GONE);
                 else
+                {
+                    noreviews.setText("No Yelp Reviews");
                     noreviews.setVisibility(View.VISIBLE);
+                }
+
                 adapter = new ReviewAdapter(getContext(), yelp_reviews, false , this);
 
                 recyclerView.setAdapter(adapter);
@@ -529,10 +533,14 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
             else
 
             {
-                if(google_reviews.size()> 0)
+                if(google_reviews.size() > 0)
                     noreviews.setVisibility(View.GONE);
                 else
+                {
+                    noreviews.setText("No Google Reviews");
                     noreviews.setVisibility(View.VISIBLE);
+                }
+
                 adapter = new ReviewAdapter(getContext(), google_reviews, true , this);
 
                 recyclerView.setAdapter(adapter);
@@ -553,10 +561,25 @@ public class ReviewFragment extends android.support.v4.app.Fragment implements A
     }
 
 
-    public void checkEmpty()
+    public void checkEmpty(boolean revType)
     {
+
         TextView norev = (TextView) view.findViewById(R.id.noreviews);
-        norev.setVisibility(view.VISIBLE);
+        if(revType)
+        {
+            Log.d(TAG, "checkEmpty: "+revType);
+            norev.setText("No Google Reviews");
+            norev.setVisibility(view.VISIBLE);
+
+        }
+
+        else
+        {
+            Log.d(TAG, "checkEmpty: "+revType);
+            norev.setText("No Yelp Reviews");
+            norev.setVisibility(view.VISIBLE);
+        }
+
     }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
