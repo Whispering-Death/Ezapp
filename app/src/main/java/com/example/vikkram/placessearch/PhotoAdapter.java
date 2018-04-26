@@ -34,10 +34,15 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     View view;
     SharedPreferences myprefs;
     // data is passed into the constructor
-    PhotoAdapter(Context context, List<PlacePhotoMetadata> data) {
+    PhotoAdapter(Context context, List<PlacePhotoMetadata> data, PhotoFragment fragment) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         Log.d(TAG, "PhotoAdapter: "+this.mData.size());
+        if(data.isEmpty())
+        {
+            fragment.checkEmpty();
+        }
+
     }
 
     @NonNull

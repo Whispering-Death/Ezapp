@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
@@ -36,7 +37,7 @@ public class PhotoFragment extends android.support.v4.app.Fragment{
 
     View view;
 
-
+    PhotoFragment fragment;
 
 
     private void getPhotoMetadata() {
@@ -74,7 +75,7 @@ public class PhotoFragment extends android.support.v4.app.Fragment{
                         photoMetadataBuffer.release();
                         RecyclerView recyclerView = view.findViewById(R.id.photo_recycler);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        adapter = new PhotoAdapter(getContext(), photosDataList);
+                        adapter = new PhotoAdapter(getContext(), photosDataList,fragment);
                         //adapter.setClickListener(this);
 
                         //recyclerView.invalidate();
@@ -85,11 +86,17 @@ public class PhotoFragment extends android.support.v4.app.Fragment{
         //Log.d(TAG, "Place metadata: "+photosDataList.size());
     }
 
+    public void checkEmpty()
+    {
+        TextView nophoto = (TextView)view.findViewById(R.id.nophoto);
+        nophoto.setVisibility(View.VISIBLE);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.photo_adapter, container, false);
-
-
+        TextView nophoto = view.findViewById(R.id.nophoto);
+        nophoto.setVisibility(View.GONE);
+        fragment = this;
         geoDataClient = Places.getGeoDataClient(getContext(),null);
 
 
