@@ -49,9 +49,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         boolean enabled = locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-// check if enabled and if not send user to the GSP settings
-// Better solution would be to display a dialog and suggesting to
-// go to the settings
+
         if (!enabled) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
@@ -89,13 +87,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOC_REQ_CODE);
@@ -118,14 +110,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location1) {
-        /*
-        lat = location1.getLatitude();
-        lon = location1.getLongitude();
-        Log.d(TAG, "Latitude: "+lat);
-        Log.d(TAG, "Longitude:  "+lon);
-        locationManager.removeUpdates(this);
-        */
-
+       
     }
 
     @Override

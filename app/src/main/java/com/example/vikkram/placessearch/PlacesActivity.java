@@ -161,15 +161,7 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
         );
 
 
-        //JSONArray jsonData =
-        /*
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-        */
-        // set up the RecyclerView
+       
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PlaceSearchAdapter(this, jsonList);
@@ -312,12 +304,10 @@ public class PlacesActivity extends AppCompatActivity implements PlaceSearchAdap
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        
         if (id == R.id.action_settings) {
 
             Log.d(TAG, "onOptionsItemSelected: ");
